@@ -67,7 +67,19 @@ window.onload = () => {
             userParametersValidator.email.test(userParameters.email) &&
             userParametersValidator.telephone.test(userParameters.telephone)
         ) {
-           
+            handleGameOptions.myForm.style.display = "none";
+            
+            // Si el formulario es correcto activaremos los botones
+
+            // - Si pulsamos en el boton de informacion nos mostrara un popup con informacion de la partida
+            handleGameOptions.help_outline.addEventListener('click', info, false);
+
+            // - Si pulsamos en el boton de estadisticas nos mostrara un popup con estadisticas de la partida
+            handleGameOptions.barChart.addEventListener('click', estadisticas, false);
+
+            // - Si pulsamos en el boton de reniew empezaremos una partida nueva
+            handleGameOptions.newGame.addEventListener('click', renewGame, false);
+            
            startGame()
         } else {
             // Guardaremos los que son incorrectos para devolver un mensjaje de error personalizado
@@ -113,21 +125,6 @@ window.onload = () => {
      * Crearemos la funcionalidad de las teclas y del juego
      */
     function startGame() {
-        handleGameOptions.myForm.style.display = "none";
-
-
-        // Si el formulario es correcto activaremos los botones
-
-        // - Si pulsamos en el boton de informacion nos mostrara un popup con informacion de la partida
-        handleGameOptions.help_outline.addEventListener('click', info, false);
-
-        // - Si pulsamos en el boton de estadisticas nos mostrara un popup con estadisticas de la partida
-        handleGameOptions.barChart.addEventListener('click', estadisticas, false);
-
-        // - Si pulsamos en el boton de reniew empezaremos una partida nueva
-        handleGameOptions.newGame.addEventListener('click', renewGame, false);
-        
-        
         board()
         keyboard()
         startTimer()
@@ -255,11 +252,11 @@ window.onload = () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Enhorabona! Has guanyat!',
-                text: 'Ho has aconseguit amb ' + (gameParameters.guessesRemaining - 1) + ' intents i amb segons',
+                text: 'Ho has aconseguit amb ' + (gameParameters.guessesRemaining - 1) + ' intents i amb ' + gameParameters.speed + ' amb segons',
             })
             stopTimer()
             gameParameters.bestGame = (gameParameters.guessesRemaining - 1 > gameParameters.bestGame) ? gameParameters.guessesRemaining - 1 : gameParameters.bestGame;
-            gameParameters.bestSpeed = (gameParameters.speed < gameParameters.bestSpeed) ? gameParameters.speed : gameParameters.bestSpeed;
+            gameParameters.bestSpeed = (gameParameters.speed < gameParameters.bestSpeed) ? gameParameters.bestSpeed : gameParameters.speed;
             return false;
         } else {
             gameParameters.guessesRemaining -= 1;
@@ -270,9 +267,9 @@ window.onload = () => {
                 Swal.fire({
                     icon: 'error',
                     title: "Has perdut el numero d'intents!",
-                    text: 'La paraula certa era el ' + gameParameters.word,
+                    text: 'La paraula certa era: ' + gameParameters.word.charAt(0).toUpperCase() + gameParameters.word.slice(1),
                 })
-                stopTimer()
+               stopTimer()
             }
         }
     }
@@ -316,21 +313,26 @@ window.onload = () => {
         gameParameters.nextLetter = 0
         gameParameters.numberOfGames += 1
         gameParameters.speed = 0
-        
-        startGame()
+
+        handleGameOptions.newGame.removeEventListener("click", startGame, false);
+        handleGameOptions.newGame.addEventListener("click", startGame, false);
+        board()
+        startTimer()
     }
-    let timerId;
+    
+    // Agregaremos un cronometro para obtener la partida mas rapida realizada
+    let timer;
     function startTimer() {
         let startTime = new Date();
-        timerId = setInterval(function() {
+        timer = setInterval(function() {
             let elapsedTime = new Date() - startTime;
-            gameParameters.speed = parseFloat((elapsedTime / 1000).toFixed(2));
+            gameParameters.speed = parseFloat((elapsedTime / 1000).toFixed(2))
         }, 20);
-        console.log(gameParameters.speed)
+        
     }
 
     function stopTimer() {
-        clearInterval(timerId);
+        clearInterval(timer);
     }
 
 }
@@ -388,8 +390,9 @@ function estadisticas(){
         imageWidth: 100,
         imageAlt: 'Custom image',
     })
+    console.log(gameParameters.speed)
+    console.log(gameParameters.bestSpeed)
 }
-
 
 /**
  * Devolveremos una palabra aleatoria del dicionario.
