@@ -252,7 +252,7 @@ window.onload = () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Enhorabona! Has guanyat!',
-                text: 'Ho has aconseguit amb ' + (gameParameters.guessesRemaining - 1) + ' intents i amb ' + gameParameters.speed + ' amb segons',
+                text: 'Ho has aconseguit amb ' + (gameParameters.guessesRemaining - 1) + ' intents i amb ' + gameParameters.speed + ' segons',
             })
             stopTimer()
             gameParameters.bestGame = (gameParameters.guessesRemaining - 1 > gameParameters.bestGame) ? gameParameters.guessesRemaining - 1 : gameParameters.bestGame;
@@ -390,8 +390,7 @@ function estadisticas(){
         imageWidth: 100,
         imageAlt: 'Custom image',
     })
-    console.log(gameParameters.speed)
-    console.log(gameParameters.bestSpeed)
+   
 }
 
 /**
