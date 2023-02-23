@@ -68,7 +68,7 @@ window.onload = () => {
             userParametersValidator.telephone.test(userParameters.telephone)
         ) {
             handleGameOptions.myForm.style.display = "none";
-            
+
             // Si el formulario es correcto activaremos los botones
 
             // - Si pulsamos en el boton de informacion nos mostrara un popup con informacion de la partida
@@ -79,8 +79,8 @@ window.onload = () => {
 
             // - Si pulsamos en el boton de reniew empezaremos una partida nueva
             handleGameOptions.newGame.addEventListener('click', renewGame, false);
-            
-           startGame()
+
+            startGame()
         } else {
             // Guardaremos los que son incorrectos para devolver un mensjaje de error personalizado
             let errorValidator = {
@@ -184,14 +184,14 @@ window.onload = () => {
                 checkGuess()
                 return
             }
-            
+
             document.dispatchEvent(new KeyboardEvent("keyup", { 'key': event.target.textContent }))
         })
     }
 
 
     /**
-     *  Funció que comprava la paraula 
+     *  Funció que comprava la paraula
      **/
     function checkGuess() {
         let row = document.getElementsByClassName("letter-row")[6 - gameParameters.guessesRemaining]
@@ -223,27 +223,18 @@ window.onload = () => {
         for (let i = 0; i < 5; i++) {
             let letterColor = ''
             let box = row.children[i]
-            let letter = gameParameters.currentGuess[i]
 
             let letterPosition = rightGuess.indexOf(gameParameters.currentGuess[i])
             if (letterPosition === -1) {
                 letterColor = 'grey'
             } else {
-                if (gameParameters.currentGuess[i] === rightGuess[i]) {
-                    // shade green 
-                    letterColor = 'green'
-                } else {
-                    // shade box yellow
-                    letterColor = 'yellow'
-                }
-
+                letterColor = (gameParameters.currentGuess[i] === rightGuess[i]) ? 'green' : 'yellow'
                 rightGuess[letterPosition] = "#"
             }
-            
-            
+
+
             setTimeout(() => {
                 box.style.backgroundColor = letterColor
-                //shadeKeyBoard(letter, letterColor)
             }, 250 * i)
         }
 
@@ -257,6 +248,7 @@ window.onload = () => {
             stopTimer()
             gameParameters.bestGame = (gameParameters.guessesRemaining - 1 > gameParameters.bestGame) ? gameParameters.guessesRemaining - 1 : gameParameters.bestGame;
             gameParameters.bestSpeed = (gameParameters.speed > gameParameters.bestSpeed) ? gameParameters.bestSpeed : gameParameters.speed;
+            gameParameters.guessesRemaining = 0;
             return false;
         } else {
             gameParameters.guessesRemaining -= 1;
@@ -269,13 +261,13 @@ window.onload = () => {
                     title: "Has perdut el numero d'intents!",
                     text: 'La paraula certa era: ' + gameParameters.word.charAt(0).toUpperCase() + gameParameters.word.slice(1),
                 })
-               stopTimer()
+                stopTimer()
             }
         }
     }
-    
+
     /**
-     * Funció per inserta lletra 
+     * Funció per inserta lletra
      * */
     function insertLetter(pressedKey) {
         if (gameParameters.nextLetter === 5) {
@@ -292,7 +284,7 @@ window.onload = () => {
     }
 
     /**
-     *  Funció per elimina lletra 
+     *  Funció per elimina lletra
      *  */
     function deleteLetter() {
         let row = document.getElementsByClassName("letter-row")[6 - gameParameters.guessesRemaining]
@@ -319,7 +311,7 @@ window.onload = () => {
         board()
         startTimer()
     }
-    
+
     // Agregaremos un cronometro para obtener la partida mas rapida realizada
     let timer;
     function startTimer() {
@@ -328,7 +320,7 @@ window.onload = () => {
             let elapsedTime = new Date() - startTime;
             gameParameters.speed = parseFloat((elapsedTime / 1000).toFixed(2))
         }, 20);
-        
+
     }
 
     function stopTimer() {
@@ -390,7 +382,7 @@ function estadisticas(){
         imageWidth: 100,
         imageAlt: 'Custom image',
     })
-   
+
 }
 
 /**
