@@ -24,11 +24,11 @@ let gameParameters = {
     guessesRemaining: NUMBER_OF_GUESSES,
     currentGuess: [],
     nextLetter: 0,
-    numberOfGames: 0,
+    numberOfGames: 1,
     numberOfWin: 0,
     speed: 0,
     bestGame: 0,
-    bestSpeed: 0
+    bestSpeed: Number.MAX_VALUE
 }
 
 window.onload = () => {
@@ -202,7 +202,7 @@ window.onload = () => {
             guessString += value
         }
 
-        if (guessString.length != 5) {
+        if (guessString.length !== 5) {
             Swal.fire({
                 icon: 'error',
                 title: 'Has de completar la paraula',
@@ -256,7 +256,7 @@ window.onload = () => {
             })
             stopTimer()
             gameParameters.bestGame = (gameParameters.guessesRemaining - 1 > gameParameters.bestGame) ? gameParameters.guessesRemaining - 1 : gameParameters.bestGame;
-            gameParameters.bestSpeed = (gameParameters.speed < gameParameters.bestSpeed) ? gameParameters.bestSpeed : gameParameters.speed;
+            gameParameters.bestSpeed = (gameParameters.speed > gameParameters.bestSpeed) ? gameParameters.bestSpeed : gameParameters.speed;
             return false;
         } else {
             gameParameters.guessesRemaining -= 1;
@@ -311,7 +311,7 @@ window.onload = () => {
         gameParameters.guessesRemaining = NUMBER_OF_GUESSES
         gameParameters.currentGuess = []
         gameParameters.nextLetter = 0
-        gameParameters.numberOfGames += 1
+        gameParameters.numberOfGames++
         gameParameters.speed = 0
 
         handleGameOptions.newGame.removeEventListener("click", startGame, false);
@@ -386,7 +386,7 @@ function estadisticas(){
             '<p>Partidas realizades: ' + gameParameters.numberOfGames + '</p>' +
             '<p>Partidas guanyades: ' + gameParameters.numberOfWin + '</p>' +
             '<p>Millor partida: ' + gameParameters.bestGame + '</p>' +
-            '<p>Partida més ràpida: ' + gameParameters.bestSpeed + '</p>',
+            '<p>Partida més ràpida: ' + ((gameParameters.bestSpeed !== Number.MAX_VALUE) ? gameParameters.bestSpeed : 0 ) + '</p>',
         imageWidth: 100,
         imageAlt: 'Custom image',
     })
