@@ -151,6 +151,10 @@ h1 {
   display: flex;
 }
 
+#container{
+  display: none;
+}
+
 .second-row {
   margin: 0.5rem 0;
 }

@@ -68,6 +68,7 @@ window.onload = () => {
             userParametersValidator.telephone.test(userParameters.telephone)
         ) {
             handleGameOptions.myForm.style.display = "none";
+            document.getElementById('container').style.display = "block";
 
             // Si el formulario es correcto activaremos los botones
 
