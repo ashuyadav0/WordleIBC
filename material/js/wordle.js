@@ -83,42 +83,95 @@ window.onload = () => {
 
             startGame()
         } else {
-            // Guardaremos los que son incorrectos para devolver un mensjaje de error personalizado
-            let errorValidator = {
-                firstName: userParametersValidator.firstName.test(userParameters.firstName),
-                lastName: userParametersValidator.lastName.test(userParameters.lastName),
-                email: userParametersValidator.email.test(userParameters.email),
-                telephone: userParametersValidator.telephone.test(userParameters.telephone)
-            }
+            
+            // Sabiendo que los datos no son validos comprobaremos si es un campo vacio o es un campo no valido.
+            
+            // - Si el valor esta vacio mostraremos el siguiente mensaje y si no comprobaremos que el mensaje
+            //   este correctamente escrito
+            if  (
+                userParameters.firstName.length === 0 ||
+                userParameters.lastName.length === 0 ||
+                userParameters.email.length === 0 ||
+                userParameters.telephone.length === 0
+            ) {
 
-            let invalidFields = Object.entries(errorValidator)
-                .filter(([field, isValid]) => !isValid)
-                .map(([field]) => field);
-
-            // Traducimos los errores a catalan
-            let str = ''
-            for (let i = 0; i < invalidFields.length; i++) {
-                switch (invalidFields[i]) {
-                    case 'firstName':
-                        str += 'nom, '
-                        break;
-                    case 'lastName':
-                        str += 'cognom, '
-                        break;
-                    case 'email':
-                        str += 'email, '
-                        break;
-                    case 'telephone':
-                        str += 'telèfon, '
-                        break;
+                let errorValidator = {
+                    firstName: userParameters.firstName.length === 0,
+                    lastName: userParameters.lastName.length === 0,
+                    email: userParameters.email.length === 0,
+                    telephone: userParameters.telephone.length === 0
                 }
-            }
 
-            // Mostramos error
-            Swal.fire({
-                icon: 'warning',
-                text: 'El foramt del ' + str + ' no és correcte',
-            })
+                let invalidFields = Object.entries(errorValidator)
+                    .filter(([field, isValid]) => isValid)
+                    .map(([field]) => field);
+
+                // Traducimos los errores a catalan
+                let str = ''
+                for (let i = 0; i < invalidFields.length; i++) {
+                    switch (invalidFields[i]) {
+                        case 'firstName':
+                            str += ', nom'
+                            break;
+                        case 'lastName':
+                            str += ', cognom'
+                            break;
+                        case 'email':
+                            str += ', email'
+                            break;
+                        case 'telephone':
+                            str += ', telèfon'
+                            break;
+                    }
+                }
+                // Borraremos el primer caracter osea la ","
+                str = str.slice(1);
+
+                // Mostramos error
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'Si us plau, no deixis el camp del' + str + ' en blanc',
+                })
+            } else {
+                // Guardaremos los que son incorrectos para devolver un mensjaje de error personalizado
+                let errorValidator = {
+                    firstName: userParametersValidator.firstName.test(userParameters.firstName),
+                    lastName: userParametersValidator.lastName.test(userParameters.lastName),
+                    email: userParametersValidator.email.test(userParameters.email),
+                    telephone: userParametersValidator.telephone.test(userParameters.telephone)
+                }
+
+                let invalidFields = Object.entries(errorValidator)
+                    .filter(([field, isValid]) => !isValid)
+                    .map(([field]) => field);
+
+                // Traducimos los errores a catalan
+                let str = ''
+                for (let i = 0; i < invalidFields.length; i++) {
+                    switch (invalidFields[i]) {
+                        case 'firstName':
+                            str += ', nom'
+                            break;
+                        case 'lastName':
+                            str += ', cognom'
+                            break;
+                        case 'email':
+                            str += ', email'
+                            break;
+                        case 'telephone':
+                            str += ', telèfon'
+                            break;
+                    }
+                }
+                // Borraremos el primer caracter osea la ","
+                str = str.slice(1);
+
+                // Mostramos error
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'El foramt del' + str + ' no és correcte',
+                })
+            }
         }
     }
 
@@ -186,7 +239,7 @@ window.onload = () => {
                 return
             }
 
-            document.dispatchEvent(new KeyboardEvent("keyup", { 'key': event.target.textContent }))
+            document.dispatchEvent(new KeyboardEvent("keyup", {'key': event.target.textContent}))
         })
     }
 
@@ -299,7 +352,7 @@ window.onload = () => {
     /**
      * Resetea la partida para poder volver a jugar
      */
-    function renewGame(){
+    function renewGame() {
         gameParameters.word = newWord()
         gameParameters.guessesRemaining = NUMBER_OF_GUESSES
         gameParameters.currentGuess = []
@@ -315,9 +368,10 @@ window.onload = () => {
 
     // Agregaremos un cronometro para obtener la partida mas rapida realizada
     let timer;
+
     function startTimer() {
         let startTime = new Date();
-        timer = setInterval(function() {
+        timer = setInterval(function () {
             let elapsedTime = new Date() - startTime;
             gameParameters.speed = parseFloat((elapsedTime / 1000).toFixed(2))
         }, 20);
@@ -333,7 +387,7 @@ window.onload = () => {
 /**
  * Mostraremos informacion para saber como jugar.
  */
-function info(){
+function info() {
     Swal.fire({
         icon: 'info',
         title: 'Com jugar al WordleIBC?',
@@ -371,7 +425,7 @@ function info(){
 /**
  * Mostraremos un popup con las estadisticas del juego.
  */
-function estadisticas(){
+function estadisticas() {
     Swal.fire({
         imageUrl: 'https://w7.pngwing.com/pngs/283/859/png-transparent-bar-chart-computer-icons-diagram-%E6%88%BF%E5%9C%B0%E4%BA%A7-angle-text-rectangle.png',
         title: 'Estadístiques',
@@ -379,7 +433,7 @@ function estadisticas(){
             '<p>Partidas realizades: ' + gameParameters.numberOfGames + '</p>' +
             '<p>Partidas guanyades: ' + gameParameters.numberOfWin + '</p>' +
             '<p>Millor partida: ' + gameParameters.bestGame + '</p>' +
-            '<p>Partida més ràpida: ' + ((gameParameters.bestSpeed !== Number.MAX_VALUE) ? gameParameters.bestSpeed : 0 ) + '</p>',
+            '<p>Partida més ràpida: ' + ((gameParameters.bestSpeed !== Number.MAX_VALUE) ? gameParameters.bestSpeed : 0) + '</p>',
         imageWidth: 100,
         imageAlt: 'Custom image',
     })
@@ -390,7 +444,7 @@ function estadisticas(){
  * Devolveremos una palabra aleatoria del dicionario.
  * @return {string}
  */
-function newWord(){
+function newWord() {
     let word = dic[Math.floor(Math.random() * dic.length)]
     console.log(word)
     return word
